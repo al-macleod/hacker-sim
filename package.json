@@ -1,0 +1,13 @@
+{
+  "name": "websec-academy",
+  "version": "1.0.0",
+  "description": "Interactive Security Learning Platform",
+  "type": "module",
+  "scripts": {
+    "dev": "http-server ."
+  },
+  "keywords": ["security", "education", "hacking", "web-security"],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {}
+}
