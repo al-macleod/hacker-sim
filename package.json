@@ -6,8 +6,15 @@
   "scripts": {
     "dev": "http-server ."
   },
-  "keywords": ["security", "education", "hacking", "web-security"],
+  "keywords": [
+    "security",
+    "education",
+    "hacking",
+    "web-security"
+  ],
   "author": "",
   "license": "ISC",
-  "devDependencies": {}
+  "devDependencies": {
+    "http-server": "^14.1.1"
+  }
 }
