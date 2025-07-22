@@ -34,9 +34,6 @@ export class Player {
     this.achievements = [];
     this.listeners = {};
     this.activeMissions = new Set();
-    
-    // Initialize with basic scanning skill
-    this.skills.add('Network Scanning');
   }
 
   on(event, callback) {
