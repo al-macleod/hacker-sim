@@ -502,13 +502,25 @@ export class Terminal {
   }
 
   checkToolUnlocks(skillId, level) {
-    // Check if any tools can be unlocked with this skill upgrade
-    Object.entries(this.advancedTools.tools).forEach(([toolId, tool]) => {
-      const [reqSkill, reqLevel] = tool.unlockRequirement.split(':');
-      if (reqSkill === skillId && parseInt(reqLevel) === level) {
-        if (this.advancedTools.unlockTool(toolId, this.game.player)) {
-          this.writeLine(`New tool unlocked: ${tool.name}!`, 'success');
+    const player = this.game.player;
+    const toolUnlocks = {
+      'network_scanning': { 2: ['masscan'], 4: ['wireshark'] },
+      'web_recon': { 2: ['dirb'], 3: ['burp'] },
+      'sql_injection': { 2: ['sqlmap'] },
+      'malware_analysis': { 3: ['msfconsole'] },
+      'hash_cracking': { 2: ['hashcat'], 3: ['john'] },
+      'social_engineering': { 2: ['setoolkit'] },
+      'cryptography': { 3: ['aircrack'] },
+      'vulnerability_scanning': { 4: ['hydra'] }
+    };
+    
+    if (toolUnlocks[skillId] && toolUnlocks[skillId][level]) {
+      toolUnlocks[skillId][level].forEach(toolId => {
+        if (player.availableTools[toolId] && !player.availableTools[toolId].unlocked) {
+          player.availableTools[toolId].unlocked = true;
+          this.writeLine(`New tool unlocked: ${player.availableTools[toolId].name}!`, 'success');
         }
+      });
       }
     });
   }
