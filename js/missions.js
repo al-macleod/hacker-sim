@@ -1,145 +1,223 @@
 export class MissionSystem {
   constructor() {
-    this.missions = [
-      {
-        id: 1,
-        title: 'First Reconnaissance',
-        description: 'Learn the basics of network scanning and information gathering.',
-        objective: 'Perform a network scan using the scan command',
-        xpReward: 50,
-        requiredLevel: 1,
-        completed: false,
-        type: 'tutorial'
+    this.missions = {
+      // Tutorial Missions
+      'first_scan': {
+        id: 'first_scan',
+        name: 'First Network Scan',
+        description: 'Perform your first network reconnaissance',
+        type: 'tutorial',
+        difficulty: 'beginner',
+        requirements: [],
+        objectives: ['Use nmap to scan a target network'],
+        rewards: {
+          xp: 100,
+          btc: 0.001,
+          skillPoints: 5,
+          items: ['basic_scanner_config']
+        },
+        repeatable: false,
+        completed: false
       },
-      {
-        id: 2,
-        title: 'Vulnerability Discovery',
-        description: 'Identify security weaknesses in web applications.',
-        objective: 'Use the vulnerability scanner to find security issues',
-        xpReward: 100,
-        requiredLevel: 2,
-        completed: false,
-        type: 'scanning'
+
+      // Recurring Farming Missions
+      'daily_recon': {
+        id: 'daily_recon',
+        name: 'Daily Reconnaissance',
+        description: 'Perform routine network scanning for intelligence gathering',
+        type: 'farming',
+        difficulty: 'beginner',
+        requirements: ['network_scanning:1'],
+        objectives: ['Scan 3 different networks', 'Identify 5 open ports'],
+        rewards: {
+          xp: 50,
+          btc: 0.0005,
+          skillPoints: 2,
+          items: ['network_intel', 'port_list']
+        },
+        repeatable: true,
+        cooldown: 3600000, // 1 hour
+        dropRates: {
+          'advanced_scanner': 0.05,
+          'exploit_db_access': 0.02,
+          'btc_bonus': 0.1
+        }
       },
-      {
-        id: 3,
-        title: 'SQL Injection Hunt',
-        description: 'Learn to identify and exploit SQL injection vulnerabilities.',
-        objective: 'Successfully perform a SQL injection attack',
-        xpReward: 150,
-        requiredLevel: 3,
-        completed: false,
-        type: 'exploitation'
+
+      'web_vuln_hunt': {
+        id: 'web_vuln_hunt',
+        name: 'Web Vulnerability Hunt',
+        description: 'Search for vulnerabilities in web applications',
+        type: 'farming',
+        difficulty: 'intermediate',
+        requirements: ['web_recon:2', 'sql_injection:1'],
+        objectives: ['Find SQL injection in 2 sites', 'Discover XSS vulnerability'],
+        rewards: {
+          xp: 150,
+          btc: 0.002,
+          skillPoints: 8,
+          items: ['sql_payload_pack', 'xss_vectors']
+        },
+        repeatable: true,
+        cooldown: 7200000, // 2 hours
+        dropRates: {
+          'sqlmap_premium': 0.08,
+          'burp_extension': 0.06,
+          'zero_day_exploit': 0.01,
+          'btc_jackpot': 0.03
+        }
       },
-      {
-        id: 4,
-        title: 'Cross-Site Scripting (XSS)',
-        description: 'Discover and exploit XSS vulnerabilities in web applications.',
-        objective: 'Find and exploit an XSS vulnerability',
-        xpReward: 150,
-        requiredLevel: 4,
-        completed: false,
-        type: 'exploitation'
+
+      'crypto_mining_hack': {
+        id: 'crypto_mining_hack',
+        name: 'Crypto Mining Operation',
+        description: 'Infiltrate and extract from cryptocurrency mining pools',
+        type: 'farming',
+        difficulty: 'advanced',
+        requirements: ['cryptography:3', 'malware_analysis:2'],
+        objectives: ['Breach mining pool security', 'Extract wallet addresses'],
+        rewards: {
+          xp: 300,
+          btc: 0.01,
+          skillPoints: 15,
+          items: ['mining_malware', 'wallet_cracker']
+        },
+        repeatable: true,
+        cooldown: 14400000, // 4 hours
+        dropRates: {
+          'advanced_rootkit': 0.12,
+          'crypto_stealer': 0.08,
+          'premium_vpn_access': 0.15,
+          'btc_mega_bonus': 0.05
+        }
       },
-      {
-        id: 5,
-        title: 'CSRF Token Analysis',
-        description: 'Analyze Cross-Site Request Forgery protection mechanisms.',
-        objective: 'Identify CSRF vulnerabilities in target applications',
-        xpReward: 200,
-        requiredLevel: 5,
-        completed: false,
-        type: 'analysis'
+
+      // High-Value Heist Missions
+      'bank_infiltration': {
+        id: 'bank_infiltration',
+        name: 'Digital Bank Heist',
+        description: 'Infiltrate a major banking institution',
+        type: 'heist',
+        difficulty: 'expert',
+        requirements: ['sql_injection:5', 'social_engineering:3', 'malware_analysis:4'],
+        objectives: ['Bypass 2FA system', 'Access customer database', 'Transfer funds'],
+        rewards: {
+          xp: 1000,
+          btc: 0.1,
+          skillPoints: 50,
+          items: ['banking_trojan', 'swift_exploit', 'offshore_account']
+        },
+        repeatable: true,
+        cooldown: 86400000, // 24 hours
+        dropRates: {
+          'zero_day_banking': 0.20,
+          'insider_contact': 0.10,
+          'btc_whale_wallet': 0.02
+        }
       },
-      {
-        id: 6,
-        title: 'Authentication Bypass',
-        description: 'Learn techniques to bypass weak authentication mechanisms.',
-        objective: 'Successfully bypass authentication on a target system',
-        xpReward: 250,
-        requiredLevel: 6,
-        completed: false,
-        type: 'exploitation'
-      },
-      {
-        id: 7,
-        title: 'Session Hijacking',
-        description: 'Understand session management vulnerabilities.',
-        objective: 'Demonstrate session hijacking techniques',
-        xpReward: 300,
-        requiredLevel: 7,
-        completed: false,
-        type: 'exploitation'
-      },
-      {
-        id: 8,
-        title: 'API Security Assessment',
-        description: 'Test REST API endpoints for security vulnerabilities.',
-        objective: 'Perform comprehensive API security testing',
-        xpReward: 350,
-        requiredLevel: 8,
-        completed: false,
-        type: 'assessment'
+
+      'government_breach': {
+        id: 'government_breach',
+        name: 'Government System Breach',
+        description: 'Infiltrate classified government systems',
+        type: 'heist',
+        difficulty: 'legendary',
+        requirements: ['vulnerability_scanning:8', 'payload_development:5', 'cryptography:7'],
+        objectives: ['Breach firewall', 'Escalate privileges', 'Extract classified data'],
+        rewards: {
+          xp: 2500,
+          btc: 0.5,
+          skillPoints: 100,
+          items: ['classified_exploits', 'nsa_toolkit', 'diplomatic_immunity']
+        },
+        repeatable: true,
+        cooldown: 604800000, // 7 days
+        dropRates: {
+          'nation_state_malware': 0.30,
+          'quantum_decryption': 0.05,
+          'btc_treasury_access': 0.01
+        }
       }
-    ];
-    
-    this.currentMissionIndex = 0;
-    this.listeners = {};
-  }
-
-  on(event, callback) {
-    if (!this.listeners[event]) {
-      this.listeners[event] = [];
-    }
-    this.listeners[event].push(callback);
-  }
-
-  emit(event, data) {
-    if (this.listeners[event]) {
-      this.listeners[event].forEach(callback => callback(data));
-    }
-  }
-
-  init() {
-    // Initialize mission system
-  }
-
-  getCurrentMission() {
-    return this.missions[this.currentMissionIndex] || null;
-  }
-
-  getNextMission() {
-    if (this.currentMissionIndex < this.missions.length - 1) {
-      this.currentMissionIndex++;
-      return this.missions[this.currentMissionIndex];
-    }
-    return null;
-  }
-
-  completeMission(missionId) {
-    const mission = this.missions.find(m => m.id === missionId);
-    if (mission && !mission.completed) {
-      mission.completed = true;
-      this.emit('missionComplete', mission);
-      return true;
-    }
-    return false;
-  }
-
-  getMissionProgress() {
-    const completed = this.missions.filter(m => m.completed).length;
-    return {
-      completed,
-      total: this.missions.length,
-      percentage: (completed / this.missions.length) * 100
     };
+
+    this.activeMissions = new Set();
+    this.completedMissions = new Set();
+    this.missionCooldowns = new Map();
   }
 
-  getAvailableMissions(playerLevel) {
-    return this.missions.filter(m => m.requiredLevel <= playerLevel && !m.completed);
+  getAvailableMissions(playerSkills, playerLevel) {
+    return Object.values(this.missions).filter(mission => {
+      // Check if mission is on cooldown
+      if (this.missionCooldowns.has(mission.id)) {
+        const cooldownEnd = this.missionCooldowns.get(mission.id);
+        if (Date.now() < cooldownEnd) return false;
+      }
+
+      // Check if already completed (for non-repeatable missions)
+      if (!mission.repeatable && this.completedMissions.has(mission.id)) {
+        return false;
+      }
+
+      // Check requirements
+      return mission.requirements.every(req => {
+        const [skill, level] = req.split(':');
+        return playerSkills[skill] >= parseInt(level);
+      });
+    });
   }
 
-  getMissionByType(type) {
-    return this.missions.filter(m => m.type === type);
+  startMission(missionId) {
+    const mission = this.missions[missionId];
+    if (!mission) return false;
+
+    this.activeMissions.add(missionId);
+    return true;
+  }
+
+  completeMission(missionId, player) {
+    const mission = this.missions[missionId];
+    if (!mission || !this.activeMissions.has(missionId)) return null;
+
+    this.activeMissions.delete(missionId);
+    this.completedMissions.add(missionId);
+
+    // Set cooldown for repeatable missions
+    if (mission.repeatable && mission.cooldown) {
+      this.missionCooldowns.set(missionId, Date.now() + mission.cooldown);
+    }
+
+    // Calculate rewards with drop rates
+    const rewards = { ...mission.rewards };
+    const droppedItems = [];
+
+    // Process drop rates
+    if (mission.dropRates) {
+      Object.entries(mission.dropRates).forEach(([item, rate]) => {
+        if (Math.random() < rate) {
+          droppedItems.push(item);
+          
+          // Special BTC bonuses
+          if (item.includes('btc')) {
+            const bonusMultiplier = item.includes('mega') ? 10 : 
+                                  item.includes('jackpot') ? 5 : 
+                                  item.includes('whale') ? 50 : 2;
+            rewards.btc *= bonusMultiplier;
+          }
+        }
+      });
+    }
+
+    rewards.droppedItems = droppedItems;
+    return rewards;
+  }
+
+  getMissionProgress(missionId) {
+    // Simulate mission progress tracking
+    return {
+      completed: this.completedMissions.has(missionId),
+      active: this.activeMissions.has(missionId),
+      cooldownRemaining: this.missionCooldowns.has(missionId) ? 
+        Math.max(0, this.missionCooldowns.get(missionId) - Date.now()) : 0
+    };
   }
 }

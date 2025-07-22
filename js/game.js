@@ -1,13 +1,10 @@
 import { Player } from './player.js';
-import { MissionSystem } from './missions.js';
 import { TargetApplications } from './targets.js';
 
 export class Game {
   constructor() {
     this.player = new Player();
-    this.missions = new MissionSystem();
     this.targets = new TargetApplications();
-    this.currentMission = null;
     this.isInitialized = false;
   }
 
@@ -15,48 +12,41 @@ export class Game {
     if (this.isInitialized) return;
     
     this.updateUI();
-    this.missions.init();
     this.targets.init();
-    this.currentMission = this.missions.getCurrentMission();
-    this.updateMissionDisplay();
     this.isInitialized = true;
     
     // Listen for player updates
     this.player.on('update', () => this.updateUI());
     this.player.on('levelUp', (data) => this.handleLevelUp(data));
-    this.missions.on('missionComplete', (mission) => this.handleMissionComplete(mission));
   }
 
   updateUI() {
     document.getElementById('player-level').textContent = this.player.level;
     document.getElementById('player-xp').textContent = this.player.xp;
+    document.getElementById('player-btc').textContent = this.player.btcBalance.toFixed(6);
+    document.getElementById('player-skill-points').textContent = this.player.skillPoints;
     document.getElementById('player-reputation').textContent = this.player.reputation;
     
     this.updateSkillsDisplay();
     this.updateToolsDisplay();
     this.updateAchievementsDisplay();
+    this.updateInventoryDisplay();
   }
 
   updateSkillsDisplay() {
     const skillsList = document.getElementById('skills-list');
     skillsList.innerHTML = '';
     
-    const allSkills = [
-      'Network Scanning', 'Vulnerability Assessment', 'SQL Injection',
-      'XSS Detection', 'CSRF Analysis', 'Authentication Bypass',
-      'Session Management', 'API Security Testing', 'Social Engineering Awareness',
-      'Cryptography Analysis', 'Reverse Engineering', 'Malware Analysis'
-    ];
-    
-    allSkills.forEach(skill => {
-      const hasSkill = this.player.hasSkill(skill);
+    Object.entries(this.player.skills).forEach(([skillId, level]) => {
+      const skillName = skillId.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
       const skillEl = document.createElement('div');
-      skillEl.className = `skill-item p-2 rounded ${hasSkill ? 'bg-green-900 text-green-300' : 'bg-gray-700 text-gray-400'}`;
+      skillEl.className = `skill-item p-2 rounded ${level > 0 ? 'bg-green-900 text-green-300' : 'bg-gray-700 text-gray-400'}`;
       skillEl.innerHTML = `
         <div class="flex items-center justify-between">
-          <span class="text-sm">${skill}</span>
-          <span class="text-xs">${hasSkill ? '✓' : '🔒'}</span>
+          <span class="text-sm">${skillName}</span>
+          <span class="text-xs">${level > 0 ? `Lv.${level}` : '🔒'}</span>
         </div>
+        ${level > 0 ? `<div class="progress-bar mt-1"><div class="progress-fill" style="width: ${Math.min(100, (level / 10) * 100)}%"></div></div>` : ''}
       `;
       skillsList.appendChild(skillEl);
     });
@@ -116,41 +106,17 @@ export class Game {
     });
   }
 
-  updateMissionDisplay() {
-    const missionContent = document.getElementById('mission-content');
-    if (this.currentMission) {
-      missionContent.innerHTML = `
-        <h4 class="font-semibold text-white mb-2">${this.currentMission.title}</h4>
-        <p class="mb-3">${this.currentMission.description}</p>
-        <div class="text-sm text-gray-400">
-          <strong>Objective:</strong> ${this.currentMission.objective}
-        </div>
-        <div class="text-sm text-blue-400 mt-2">
-          <strong>Reward:</strong> ${this.currentMission.xpReward} XP
-        </div>
-      `;
+  updateInventoryDisplay() {
+    // Update inventory count in UI if element exists
+    const inventoryCount = document.getElementById('inventory-count');
+    if (inventoryCount) {
+      inventoryCount.textContent = this.player.inventory.length;
     }
   }
 
   handleLevelUp(data) {
     this.showNotification(`Level Up! You reached level ${data.level}`, 'success');
-    if (data.unlockedSkills.length > 0) {
-      data.unlockedSkills.forEach(skill => {
-        this.showNotification(`New skill unlocked: ${skill}`, 'info');
-      });
-    }
-    if (data.unlockedTools.length > 0) {
-      data.unlockedTools.forEach(tool => {
-        this.showNotification(`New tool unlocked: ${tool}`, 'info');
-      });
-    }
-  }
-
-  handleMissionComplete(mission) {
-    this.showNotification(`Mission completed: ${mission.title}`, 'success');
-    this.player.addXP(mission.xpReward);
-    this.currentMission = this.missions.getNextMission();
-    this.updateMissionDisplay();
+    this.showNotification(`Gained ${5 + data.level} skill points!`, 'info');
   }
 
   showNotification(message, type = 'info') {
@@ -280,25 +246,11 @@ export class Game {
   }
 
   handleMissionCommand(args) {
-    if (this.currentMission) {
-      return {
-        success: true,
-        message: `Current Mission: ${this.currentMission.title}\n\n${this.currentMission.description}\n\nObjective: ${this.currentMission.objective}`
-      };
-    } else {
-      return { success: true, message: 'No active missions. Check back later for new challenges!' };
-    }
+    return { success: true, message: 'Use "missions" command to view available missions in the new system.' };
   }
 
   handleSkillsCommand() {
-    const skills = Array.from(this.player.skills);
-    if (skills.length === 0) {
-      return { success: true, message: 'No skills unlocked yet. Complete missions to gain new skills!' };
-    }
-    return {
-      success: true,
-      message: `Unlocked Skills:\n${skills.map(s => `• ${s}`).join('\n')}`
-    };
+    return { success: true, message: 'Use "skills" command to view the new skill tree system.' };
   }
 
   handleToolsCommand() {
@@ -319,7 +271,7 @@ export class Game {
   handleStatusCommand() {
     return {
       success: true,
-      message: `Player Status:\nLevel: ${this.player.level}\nXP: ${this.player.xp}\nReputation: ${this.player.reputation}\nSkills: ${this.player.skills.size}\nActive Tools: ${Object.values(this.player.tools).filter(l => l > 0).length}`
+      message: `Player Status:\nLevel: ${this.player.level}\nXP: ${this.player.xp}\nBTC: ${this.player.btcBalance.toFixed(6)}\nSkill Points: ${this.player.skillPoints}\nReputation: ${this.player.reputation}\nInventory Items: ${this.player.inventory.length}`
     };
   }
 }

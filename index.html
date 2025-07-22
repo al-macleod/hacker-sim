@@ -29,6 +29,14 @@
             <span id="player-xp" class="text-green-400 font-bold">0</span>
           </div>
           <div class="flex items-center space-x-2">
+            <span class="text-gray-400">BTC:</span>
+            <span id="player-btc" class="text-yellow-400 font-bold">0.000000</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <span class="text-gray-400">SP:</span>
+            <span id="player-skill-points" class="text-purple-400 font-bold">0</span>
+          </div>
+          <div class="flex items-center space-x-2">
             <span class="text-gray-400">Reputation:</span>
             <span id="player-reputation" class="text-yellow-400 font-bold">White Hat</span>
           </div>
@@ -39,15 +47,15 @@
     <div class="container mx-auto p-4 grid grid-cols-1 lg:grid-cols-3 gap-6">
       <!-- Main Terminal Area -->
       <div class="lg:col-span-2 space-y-6">
-        <!-- Mission Brief -->
-        <div id="mission-panel" class="bg-gray-800 rounded-lg p-6 border border-gray-700">
+        <!-- System Status -->
+        <div id="system-panel" class="bg-gray-800 rounded-lg p-6 border border-gray-700">
           <h2 class="text-lg font-bold text-white mb-4 flex items-center">
             <span class="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></span>
-            Current Mission
+            System Status
           </h2>
-          <div id="mission-content" class="text-gray-300">
-            <p class="mb-2">Welcome to WebSec Academy! Your mission is to learn ethical hacking techniques.</p>
-            <p class="text-sm text-gray-400">Type 'help' to see available commands and start your journey.</p>
+          <div id="system-content" class="text-gray-300">
+            <p class="mb-2">Elite Hacker Terminal v3.0 - All systems operational</p>
+            <p class="text-sm text-gray-400">Type 'missions' to view available jobs, 'help' for commands</p>
           </div>
         </div>
 
@@ -73,7 +81,7 @@
       <div class="space-y-6">
         <!-- Skills Panel -->
         <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
-          <h3 class="text-lg font-bold text-white mb-4">Security Skills</h3>
+          <h3 class="text-lg font-bold text-white mb-4">Skill Tree</h3>
           <div id="skills-list" class="space-y-2">
             <!-- Skills will be populated by JavaScript -->
           </div>
@@ -89,7 +97,10 @@
 
         <!-- Achievements Panel -->
         <div class="bg-gray-800 rounded-lg p-6 border border-gray-700">
-          <h3 class="text-lg font-bold text-white mb-4">Achievements</h3>
+          <h3 class="text-lg font-bold text-white mb-4">Inventory</h3>
+          <div class="text-sm text-gray-400 mb-2">
+            Items: <span id="inventory-count" class="text-green-400">0</span>
+          </div>
           <div id="achievements-list" class="space-y-2">
             <!-- Achievements will be populated by JavaScript -->
           </div>
