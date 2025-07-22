@@ -2,15 +2,15 @@ export class Player {
   constructor() {
     this.level = 1;
     this.xp = 0;
-    this.skillPoints = 10;
+    this.skillPoints = 15;
     this.btcBalance = 0.01; // Starting BTC
     this.reputation = 'White Hat';
     this.skills = {
       // Initialize all skills at level 0
-      'network_scanning': 1, // Start with basic scanning
-      'port_scanning': 0,
+      'network_scanning': 2, // Start with intermediate scanning
+      'port_scanning': 1, // Start with basic port scanning
       'vulnerability_scanning': 0,
-      'web_recon': 0,
+      'web_recon': 1, // Start with basic web reconnaissance
       'sql_injection': 0,
       'xss_exploitation': 0,
       'cryptography': 0,
@@ -30,14 +30,29 @@ export class Player {
       'reverse_engineering': 0
     };
     this.tools = {
-      scanner: 1,
-      brute_force: 0,
+      scanner: 2,
+      brute_force: 1,
       packet_sniffer: 0,
-      vulnerability_scanner: 0,
+      vulnerability_scanner: 1,
       payload_generator: 0,
       proxy_tool: 0,
       forensics_kit: 0,
       crypto_analyzer: 0
+    };
+    this.selectedTool = null;
+    this.availableTools = {
+      'nmap': { name: 'Nmap Network Scanner', category: 'network', unlocked: true },
+      'masscan': { name: 'Masscan Port Scanner', category: 'network', unlocked: true },
+      'dirb': { name: 'DIRB Web Scanner', category: 'web', unlocked: true },
+      'sqlmap': { name: 'SQLMap Injection Tool', category: 'web', unlocked: false },
+      'burp': { name: 'Burp Suite Professional', category: 'web', unlocked: false },
+      'msfconsole': { name: 'Metasploit Framework', category: 'exploit', unlocked: false },
+      'hashcat': { name: 'Hashcat Password Cracker', category: 'crypto', unlocked: false },
+      'john': { name: 'John the Ripper', category: 'crypto', unlocked: false },
+      'setoolkit': { name: 'Social Engineer Toolkit', category: 'social', unlocked: false },
+      'aircrack': { name: 'Aircrack-ng WiFi Tool', category: 'wireless', unlocked: false },
+      'wireshark': { name: 'Wireshark Packet Analyzer', category: 'network', unlocked: false },
+      'hydra': { name: 'THC Hydra Brute Forcer', category: 'brute', unlocked: false }
     };
     this.inventory = [];
     this.achievements = [];

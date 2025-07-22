@@ -1,7 +1,7 @@
 import { Game } from './game.js';
-import { AdvancedTools } from './advancedTools.js';
 import { MissionSystem } from './missions.js';
 import { SkillTree } from './skillTree.js';
+import { ToolInterface } from './toolInterface.js';
 
 export class Terminal {
   constructor() {
@@ -10,11 +10,13 @@ export class Terminal {
     this.history = [];
     this.historyIndex = 0;
     this.game = new Game();
-    this.advancedTools = new AdvancedTools();
     this.missionSystem = new MissionSystem();
     this.skillTree = new SkillTree();
+    this.toolInterface = new ToolInterface(this);
     this.currentDirectory = '/home/hacker';
     this.fileSystem = this.initializeFileSystem();
+    this.selectedTool = null;
+    this.toolMode = false;
   }
 
   initializeFileSystem() {
@@ -100,6 +102,27 @@ export class Terminal {
     
     const [cmd, ...args] = command.toLowerCase().split(' ');
     
+    // Handle tool mode commands
+    if (this.toolMode && this.selectedTool) {
+      if (cmd === 'exit' || cmd === 'quit') {
+        this.toolMode = false;
+        this.selectedTool = null;
+        this.writeLine('Exited tool mode', 'info');
+        return;
+      }
+      
+      const result = this.toolInterface.executeToolCommand(this.selectedTool, cmd, args, this.game.player);
+      if (result.success) {
+        this.writeLine(result.message, 'success');
+        if (result.reward) {
+          this.writeLine(`Rewards: ${result.reward.btc ? result.reward.btc.toFixed(6) + ' BTC' : ''} ${result.reward.xp ? result.reward.xp + ' XP' : ''}`, 'info');
+        }
+      } else {
+        this.writeLine(result.message, 'error');
+      }
+      return;
+    }
+    
     switch (cmd) {
       case 'help':
         this.showHelp();
@@ -140,6 +163,17 @@ export class Terminal {
         this.writeLine('hacker');
         break;
       
+      // Tool selection and management
+      case 'tools':
+        this.showAvailableTools();
+        break;
+      case 'select':
+        this.selectTool(args);
+        break;
+      case 'tool-status':
+        this.showToolStatus();
+        break;
+      
       // Python execution
       case 'python':
       case 'python3':
@@ -150,6 +184,7 @@ export class Terminal {
       case 'nmap':
       case 'nmap-stealth':
       case 'masscan':
+      case 'dirb':
       case 'sqlmap':
       case 'burp':
       case 'msfconsole':
@@ -157,8 +192,10 @@ export class Terminal {
       case 'hashcat':
       case 'john':
       case 'setoolkit':
-      case 'gophish':
-        this.executeAdvancedTool(cmd, args);
+      case 'aircrack':
+      case 'wireshark':
+      case 'hydra':
+        this.launchTool(cmd, args);
         break;
       
       // Game-specific commands
