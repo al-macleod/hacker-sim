@@ -63,7 +63,7 @@ export class Terminal {
     this.showSystemStatus();
     
     this.inputEl.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' && e.ctrlKey) {
         const command = this.inputEl.value.trim();
         if (!command) return;
         
@@ -71,6 +71,7 @@ export class Terminal {
         this.historyIndex = this.history.length;
         this.handleCommand(command);
         this.inputEl.value = '';
+        e.preventDefault();
       } else if (e.key === 'ArrowUp') {
         if (this.historyIndex > 0) {
           this.historyIndex--;
