@@ -18,7 +18,16 @@ export class Player {
       'social_engineering': 0,
       'phishing': 0,
       'malware_analysis': 0,
-      'payload_development': 0
+      'payload_development': 0,
+      'vulnerability_assessment': 0,
+      'xss_detection': 0,
+      'csrf_analysis': 0,
+      'authentication_bypass': 0,
+      'session_management': 0,
+      'api_security_testing': 0,
+      'social_engineering_awareness': 0,
+      'cryptography_analysis': 0,
+      'reverse_engineering': 0
     };
     this.tools = {
       scanner: 1,
@@ -128,48 +137,48 @@ export class Player {
     // Level-based unlocks
     const levelUnlocks = {
       2: { 
-        skills: ['Vulnerability Assessment'], 
+        skills: ['vulnerability_assessment'], 
         tools: { vulnerability_scanner: 1 },
         achievements: [{ name: 'First Steps', description: 'Reached level 2' }]
       },
       3: { 
-        skills: ['SQL Injection'], 
+        skills: ['sql_injection'], 
         tools: { brute_force: 1 }
       },
       4: { 
-        skills: ['XSS Detection'],
+        skills: ['xss_detection'],
         tools: { payload_generator: 1 }
       },
       5: { 
-        skills: ['CSRF Analysis'],
+        skills: ['csrf_analysis'],
         tools: { proxy_tool: 1 }
       },
       6: { 
-        skills: ['Authentication Bypass'],
+        skills: ['authentication_bypass'],
         tools: { scanner: 2 }
       },
       7: { 
-        skills: ['Session Management'],
+        skills: ['session_management'],
         tools: { packet_sniffer: 1 }
       },
       8: { 
-        skills: ['API Security Testing'],
+        skills: ['api_security_testing'],
         tools: { forensics_kit: 1 }
       },
       9: { 
-        skills: ['Social Engineering Awareness'],
+        skills: ['social_engineering_awareness'],
         tools: { crypto_analyzer: 1 }
       },
       10: { 
-        skills: ['Cryptography Analysis'],
+        skills: ['cryptography_analysis'],
         achievements: [{ name: 'Security Expert', description: 'Reached level 10' }]
       },
       12: { 
-        skills: ['Reverse Engineering'],
+        skills: ['reverse_engineering'],
         tools: { scanner: 3 }
       },
       15: { 
-        skills: ['Malware Analysis'],
+        skills: ['malware_analysis'],
         tools: { vulnerability_scanner: 2 }
       }
     };
@@ -180,7 +189,7 @@ export class Player {
         // Unlock skills
         if (unlocks.skills) {
           unlocks.skills.forEach(skill => {
-            this.skills.add(skill);
+            this.skills[skill] = 1;
             unlockedSkills.push(skill);
           });
         }
