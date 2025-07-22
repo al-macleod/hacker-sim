@@ -521,8 +521,7 @@ export class Terminal {
           this.writeLine(`New tool unlocked: ${player.availableTools[toolId].name}!`, 'success');
         }
       });
-      }
-    });
+    }
   }
 
   showInventory() {
